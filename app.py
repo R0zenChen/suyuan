@@ -16,6 +16,7 @@ import re
 import secrets
 import shutil
 import subprocess
+import sys
 import atexit
 import threading
 import time
@@ -2322,6 +2323,9 @@ class SuyuanHandler(BaseHTTPRequestHandler):
 
 
 def main() -> None:
+    for stream in (sys.stdout, sys.stderr):
+        if stream is not None and hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="backslashreplace")
     host = "127.0.0.1"
     port = int(os.getenv("PORT") or load_local_env().get("PORT", "8000"))
     start_meltwater_studio()

@@ -24,7 +24,7 @@ python tools/package_release.py --platform macos-arm64 --version 0.1.0
 python tools/package_release.py --platform linux-x64 --version 0.1.0
 ```
 
-生成的 ZIP 存于被忽略的 `dist/`。本机可验证 Windows 包；macOS 和 Linux 的运行检查应在相应系统上完成。[发布工作流](.github/workflows/release.yml) 使用 Windows、macOS、Linux 运行器执行测试与启动检查。将 `v` 开头的版本标签推送到已配置的 GitHub 仓库后，工作流会把三个 ZIP 附到 GitHub Release。
+可用 `python tools/verify_release.py --platform windows-x64 --version 0.1.0` 解压并检查对应 ZIP。生成的 ZIP 存于被忽略的 `dist/`。本机可验证 Windows 包；macOS 和 Linux 的运行检查应在相应系统上完成。[发布工作流](.github/workflows/release.yml) 使用 Windows、macOS、Linux 运行器执行测试、打包和解压后的服务启动检查。将 `v` 开头的版本标签推送到已配置的 GitHub 仓库后，工作流会把三个 ZIP 附到 GitHub Release。
 
 ## 提交范围
 
