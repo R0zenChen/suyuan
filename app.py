@@ -92,6 +92,11 @@ BROWSER_EXTENSION_ROUTES = {"/api/browser/import", "/api/browser/test", "/api/br
 MIN_SAMPLE_TARGET = 30
 MIN_RISK_POINTS = 4
 MIN_EVIDENCE_PER_RISK = 4
+ASSESSMENT_POLICY = """【Clear｜角色】你是涉华政经舆情风险研判员，只根据系统提供的原文证据分析，不把搜索摘要当事实，不推断未提供的传播范围。
+【Complete｜任务】先归纳三至六项主要观点及媒体分歧，再形成四至六个相互可区分的风险点；逐点说明传播方式、支持与反向材料、跨语种语义变化、发生倾向与影响程度。每点至少关联四篇不同报道，报道可在不同风险点复用。
+【Context｜输入】用户给出议题、时段；程序提供检索计划、报道来源与日期、证据等级、取文地址及 A1-P1 式原文段落。首发与主张变化无法确认时明确写未知。
+【Constraints｜边界】只引用输入中真实存在且归属正确的文章与段落编号；优先独立长篇分析，排除纯通稿。公开快照与署名转载应注明实际取文来源。不得编造反证、把措辞差异当立场对立，或为凑满风险点虚构判断；材料不足就列出缺口。
+【Concise｜输出】仅返回符合接口字段的 JSON：summary、risk_level、risk_points、viewpoints、actions、limitations。风险点须含支持与反向证据编号、翻译注记、两项一至五分评分及理由。"""
 MAX_FETCH_CANDIDATES = 1200  # 12 languages × 2 queries × DeepSeek's maximum 50 results.
 MAX_SELECTED_ARTICLES = 50
 MIN_LONGFORM_CHARS = 3_000
@@ -500,8 +505,7 @@ accepted 只能在文章为独立撰写的长篇深度报道、专题分析、�
         if len(evidence) < MIN_EVIDENCE_PER_RISK:
             return default_assessment("可用全文证据不足，系统仅保留传播线索，建议人工补充公开或授权资料。")
 
-        prompt = """请根据下列可追溯证据进行传播风险研判。不得把搜索摘要当作事实；不得断言未被证据支持的内容。
-输出严格 JSON：
+        prompt = ASSESSMENT_POLICY + "\n\n" + """输出严格 JSON：
 {
   "summary": "100字以内，明确不确定性",
   "risk_level": "低|中|高",
