@@ -14,6 +14,7 @@ PLATFORMS = {"windows-x64", "macos-arm64", "linux-x64"}
 ROOT_FILES = [
     "README.md", "使用说明书.md", "DEVELOPMENT.md", "requirements.txt", ".env.example",
     ".github/workflows/release.yml", "tools/package_release.py", "tools/smoke_release.py",
+    "tools/verify_release.py",
 ]
 SOURCE_DIRS = ["static", "browser-extension", "meltwater-studio", "launcher", "tests", "docs"]
 EXCLUDED_PARTS = {"data", "output", "node_modules", "__pycache__", ".venv", ".git", "tmp",

@@ -40,14 +40,14 @@ jobs:
         run: node --test tests/test_meltwater_accounts.mjs
       - name: Check bundled Node syntax
         run: node --check meltwater-studio/ui/server.mjs
-      - name: Smoke test local services
-        run: python tools/smoke_release.py
       - name: Build Windows launcher
         if: matrix.platform == 'windows-x64'
         shell: pwsh
         run: pwsh -File launcher/build.ps1
       - name: Build release archive
         run: python tools/package_release.py --platform ${{ matrix.platform }}
+      - name: Verify extracted release archive
+        run: python tools/verify_release.py --platform ${{ matrix.platform }}
       - uses: actions/upload-artifact@v7
         with:
           name: release-${{ matrix.platform }}
