@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>配置中心 · 溯源</title>
+    <link rel="stylesheet" href="/static/app.css">
+    <link rel="stylesheet" href="/static/settings.css">
+  </head>
+  <body>
+    <main class="settings-shell">
+      <header class="settings-header">
+        <a class="back-link" href="/">← 返回工作台</a>
+        <div class="settings-brand"><span class="brand-mark" aria-hidden="true">▥</span><span>溯源 <b>／</b> 配置中心</span></div>
+        <span class="settings-local">仅在这台电脑上保存</span>
+      </header>
+
+      <section class="settings-intro">
+        <p class="eyebrow">CONFIGURATION / THREE CONNECTIONS</p>
+        <h1>把连接配好，<br><em>研判就绪。</em></h1>
+        <p>按顺序配置新闻检索、分析模型和数据库。每项都可以先测试，再保存。已有 Key 和密码不会在网页中回显。</p>
+      </section>
+
+      <div class="settings-layout">
+        <nav class="settings-tabs" aria-label="配置分类">
+          <button class="settings-tab active" type="button" data-tab="deepseek" aria-selected="true"><span class="tab-index">01</span><span><strong>DeepSeek 检索</strong><small>Search / Fetch</small></span><i id="deepseek-indicator" class="status-dot"></i></button>
+          <button class="settings-tab" type="button" data-tab="analysis" aria-selected="false"><span class="tab-index">02</span><span><strong>分析模型 API</strong><small>规划 / 筛选 / 研判</small></span><i id="analysis-indicator" class="status-dot"></i></button>
+          <button class="settings-tab" type="button" data-tab="mysql" aria-selected="false"><span class="tab-index">03</span><span><strong>SQL 入库</strong><small>MySQL / MariaDB</small></span><i id="mysql-indicator" class="status-dot"></i></button>
+        </nav>
+
+        <div class="settings-content">
+          <section class="settings-panel active" id="panel-deepseek" aria-labelledby="deepseek-title">
+            <div class="panel-top"><span class="panel-number">01 / SEARCH</span><span class="panel-status" id="deepseek-state">读取中…</span></div>
+            <h2 id="deepseek-title">DeepSeek 检索</h2>
+            <p class="panel-description">Search 发现候选，Fetch 提取正文。这里也可以指定默认分析使用的 DeepSeek 模型与官方思考档位。</p>
+            <form id="deepseek-form" class="config-form" autocomplete="off">
+              <label>API Key<input name="api_key" type="password" autocomplete="new-password" placeholder="填入 DeepSeek API Key"></label>
+              <div class="field-row"><label>模型标识<input name="model" list="deepseek-model-list" placeholder="例如 deepseek-flash" required><datalist id="deepseek-model-list"></datalist></label><button class="inline-button" id="deepseek-models" type="button">获取模型</button></div>
+              <label>思考强度<select name="reasoning_effort" id="deepseek-effort"></select></label>
+              <p class="field-help" id="deepseek-effort-help">获取模型后可按 DeepSeek 返回的支持档位选择；自动表示沿用模型默认值。</p>
+              <div class="form-actions"><button type="button" class="secondary-action" id="deepseek-test">测试连接</button><button type="submit" class="main-action">保存检索配置 <span>↗</span></button></div>
+            </form>
+            <p class="panel-feedback" id="deepseek-message" role="status"></p>
+            <div class="panel-footnote">配置保存在本机 <code>data/deepseek-config.json</code>；旧版 <code>.env</code> 仍可作为后备。</div>
+          </section>
+
+          <section class="settings-panel" id="panel-analysis" aria-labelledby="analysis-title" hidden>
+            <div class="panel-top"><span class="panel-number">02 / REASONING</span><span class="panel-status" id="analysis-state">读取中…</span></div>
+            <h2 id="analysis-title">分析模型 API</h2>
+            <p class="panel-description">检索式规划、长篇筛选和风险研判共用这个接口。支持 OpenAI 与 Anthropic 格式；不配置时沿用 DeepSeek。</p>
+            <form id="analysis-form" class="config-form" autocomplete="off">
+              <label>接口格式<select name="format" id="analysis-format"><option value="openai">OpenAI 兼容</option><option value="anthropic">Anthropic 兼容</option></select></label>
+              <label>服务链接<input name="base_url" type="url" placeholder="https://你的服务地址/v1" required></label>
+              <label>API Key<input name="api_key" type="password" autocomplete="new-password" placeholder="填入套餐提供的 Key"></label>
+              <div class="field-row"><label>模型标识<input name="model" list="analysis-model-list" placeholder="先获取模型，或直接填写" required><datalist id="analysis-model-list"></datalist></label><button class="inline-button" id="analysis-models" type="button">获取模型</button></div>
+              <label>思考强度<select name="reasoning_effort" id="analysis-effort"></select></label>
+              <p class="field-help" id="analysis-effort-help">自动表示沿用服务默认值。获取模型后会优先显示接口返回的支持档位。</p>
+              <div class="form-actions"><button type="button" class="secondary-action" id="analysis-test">测试连接</button><button type="submit" class="main-action">保存并启用 <span>↗</span></button><button type="button" class="text-action" id="analysis-reset">恢复 DeepSeek 默认分析</button></div>
+            </form>
+            <p class="panel-feedback" id="analysis-message" role="status"></p>
+            <div class="panel-footnote">配置保存在本机 <code>data/analysis-config.json</code>；更换服务链接时需重新填写 Key。</div>
+          </section>
+
+          <section class="settings-panel" id="panel-mysql" aria-labelledby="mysql-title" hidden>
+            <div class="panel-top"><span class="panel-number">03 / STORAGE</span><span class="panel-status" id="db-state">读取中…</span></div>
+            <h2 id="mysql-title">SQL 入库</h2>
+            <p class="panel-description">连接本机 MySQL / MariaDB。保存时创建研判、新闻主库与版本链接表，并导入已有本地记录。</p>
+            <form id="db-form" class="config-form" autocomplete="off">
+              <div class="two-columns"><label>主机<input name="host" value="127.0.0.1" required></label><label>端口<input name="port" type="number" value="3306" min="1" max="65535" required></label></div>
+              <label>数据库名<input name="database" value="suyuan" pattern="[A-Za-z0-9_]+" required></label>
+              <div class="two-columns"><label>用户名<input name="user" required></label><label>密码<input name="password" type="password" autocomplete="new-password" placeholder="已保存可留空"></label></div>
+              <div class="form-actions"><button type="button" class="secondary-action" id="db-test">测试连接</button><button type="submit" class="main-action">连接并建库 <span>↗</span></button></div>
+            </form>
+            <p class="panel-feedback" id="db-message" role="status"></p>
+            <div class="panel-footnote">连接信息保存在本机 <code>data/mysql-config.json</code>；密码不会回显。</div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <script src="/static/settings.js"></script>
+  </body>
+</html>

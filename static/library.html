@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>溯源 · 新闻 × 社媒 × 知识库</title>
+  <link rel="stylesheet" href="/static/library.css">
+  <link rel="stylesheet" href="/static/library-paper.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar"><a href="/" class="brand">溯源 <span>／</span> 研究库</a><nav><a href="/">新闻研判</a><a href="/settings">配置中心</a></nav></header>
+    <section class="hero"><div><p class="eyebrow">CHINA POLITICAL ECONOMY / EVIDENCE LIBRARY</p><h1>新闻 × 社媒<br><em>× 知识库。</em></h1><p>把海外涉华政经报道、公开讨论和研究论文放在同一个可追溯的证据库。提问时先找材料，再生成带原文出处的回答。</p></div><div class="stats" id="stats"><div><strong>—</strong><span>新闻</span></div><div><strong>—</strong><span>剪藏</span></div><div><strong>—</strong><span>社媒</span></div><div><strong>—</strong><span>论文</span></div></div></section>
+    <section class="panel ingest-panel" aria-labelledby="paper-heading">
+      <div class="panel-heading"><span class="number">KNOWLEDGE</span><div><h2 id="paper-heading">导入研究论文</h2><p>识别 PDF 正文与基础信息，存入 SQL；后台建立本地多语种向量索引。问答会标明论文页码。</p></div></div>
+      <div class="ingest-grid">
+        <form id="paper-form">
+          <label class="upload-zone" id="paper-dropzone" for="paper-file"><span class="pdf-mark">PDF</span><strong id="paper-file-label">选择或拖入论文 PDF</strong><small>单文件不超过 15 MB、150 页；扫描版自动尝试本地 OCR</small><input id="paper-file" type="file" accept=".pdf,application/pdf" required></label>
+          <div class="paper-fields"><label for="paper-title">论文标题 <small>留空从 PDF 读取</small><input id="paper-title" maxlength="500" placeholder="可选"></label><label for="paper-authors">作者 <small>可选</small><input id="paper-authors" maxlength="500" placeholder="例如 Jane Smith"></label><label for="paper-year">发表年份 <small>可选</small><input id="paper-year" type="number" min="1900" max="2100" placeholder="例如 2025"></label></div>
+          <label class="vision-option"><input id="paper-use-vision" type="checkbox">本地 OCR 不足时，使用配置的多模态分析 API 补救（会发送识别不清的页面图片，最多 12 页）</label>
+          <button type="submit" id="paper-button">识别并入库 <span>↗</span></button>
+          <p id="paper-status" class="status" role="status"></p><div class="paper-progress" id="paper-progress" hidden><span id="paper-progress-fill"></span></div>
+        </form>
+        <div class="paper-catalog"><div class="catalog-heading"><h3>已入库论文</h3><span id="paper-count">读取中…</span></div><div id="paper-list" class="paper-list"><p class="note">正在读取论文库…</p></div></div>
+      </div>
+    </section>
+    <section class="panel meltwater-panel" aria-labelledby="meltwater-heading">
+      <div class="panel-heading"><span class="number">MELTWATER</span><div><h2 id="meltwater-heading">融文全量下载</h2><p>内置融文研究台按时段下载新闻或全类型结果，逐条核验后入 SQL 与本地检索索引。</p></div></div>
+      <div class="meltwater-grid">
+        <div>
+          <div class="meltwater-connection"><span id="meltwater-connection" role="status">正在检查融文研究台…</span><button id="meltwater-refresh" type="button">刷新连接</button><button id="meltwater-add-account" type="button">＋ 添加融文账号</button></div>
+          <form id="meltwater-form">
+            <div class="meltwater-two"><label>研究主题 <input id="meltwater-subject" maxlength="300" placeholder="例如 对华电动汽车关税"></label><label>检索语境 <input id="meltwater-context" maxlength="500" placeholder="可选：贸易政策、产业链"></label></div>
+            <div class="meltwater-ai"><label>生成语种 <input id="meltwater-languages" maxlength="150" value="英西德法俄阿拉伯葡韩日"></label><button id="meltwater-ai-button" type="button">用分析模型起草检索式</button></div>
+            <label for="meltwater-query">融文 Boolean 检索式 <small>可编辑；精确短语加双引号，同义表达用 OR</small></label>
+            <textarea id="meltwater-query" required rows="4" maxlength="12000" placeholder='("China EV tariffs" OR "对华电动汽车关税") AND (analysis OR policy)'></textarea>
+            <div class="meltwater-three"><label>起始日期 <input id="meltwater-from" type="date" required></label><label>结束日期 <input id="meltwater-to" type="date" required></label><label>内容类型 <select id="meltwater-kind"><option value="news">仅新闻</option><option value="all">新闻及社交等全部类型</option></select></label></div>
+            <label>融文账号 <select id="meltwater-account"><option value="default">当前 Chrome 账号</option></select></label>
+            <div id="meltwater-accounts" class="meltwater-accounts" aria-label="融文账号管理"></div>
+            <button id="meltwater-button" type="submit">全量下载并入库 <span>↗</span></button>
+          </form>
+          <p id="meltwater-status" class="status" role="status"></p><div id="meltwater-progress" class="paper-progress" hidden><span id="meltwater-progress-fill"></span></div>
+          <p class="note">融文研究台源码已内置，启动溯源时自动启动；新增账号会打开融文官方登录页。登录资料留在本机，短时授权不写入项目源码。融文提供的匹配片段不是完整正文；受限稿件会保存计数记录，但不会作为全文证据进入问答。</p>
+        </div>
+        <div class="paper-catalog"><div class="catalog-heading"><h3>已完成的下载</h3><span id="meltwater-count">读取中…</span></div><div id="meltwater-downloads" class="paper-list"><p class="note">正在读取记录…</p></div></div>
+      </div>
+    </section>
+    <div class="columns">
+      <section class="panel"><div class="panel-heading"><span class="number">01</span><div><h2>采集社媒样本</h2><p>并行检索 Hacker News、Lemmy 公开社区 RSS，以及可选的 Mastodon 公开标签。</p></div></div><form id="collect-form"><label for="social-query">社媒检索词 <small>建议使用英文关键词，Lemmy 对最新帖子做本地筛选</small></label><input id="social-query" required minlength="3" maxlength="200" placeholder="例如 China export controls"><label for="mastodon-tag">Mastodon 话题标签 <small>可选</small></label><input id="mastodon-tag" maxlength="60" placeholder="例如 China，无需输入 #"><button type="submit" id="collect-button">采集并入库 <span>↗</span></button></form><p id="collect-status" class="status" role="status"></p><p class="note">Lemmy 无需 Key，只读取 world、china、technology、economics 社区最新 20 帖并按词过滤；不是全站搜索。源站失败会显示提示。所有社媒均为观察样本，不代表全网声量。</p></section>
+      <section class="panel ask-panel"><div class="panel-heading"><span class="number">02</span><div><h2>向研究库提问</h2><p>同时检索新闻、社媒和论文；有冲突的论文会分别保留，回答会并列呈现检索到的分歧与页码。新近信息仍需先采集入库。</p></div></div><form id="ask-form"><label for="question">你的问题</label><textarea id="question" required minlength="4" maxlength="1000" rows="5" placeholder="例如：海外关于中国电动汽车贸易风险的报道，与论文研究有哪些一致或分歧？"></textarea><button type="submit" id="ask-button">检索证据并回答 <span>↗</span></button></form><p id="ask-status" class="status" role="status"></p><div id="answer" class="answer" hidden></div><div id="sources" class="sources"></div></section>
+    </div><footer><button type="button" id="reindex-button" class="text-button">从 SQL 重新建立检索索引</button><button type="button" id="vectorize-button" class="text-button">补建新闻／社媒语义索引</button><span id="reindex-status" role="status"></span><span id="vector-status" role="status">正在读取语义索引状态…</span><span>问答融合词面与本地多语种向量检索；语义索引未完成时自动使用词面检索。</span></footer>
+  </main><script src="/static/library.js" defer></script>
+</body>
+</html>

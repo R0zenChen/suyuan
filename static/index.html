@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="涉华政经舆情风险研判演示系统">
+    <title>溯源 · 涉华政经舆情风险研判</title>
+    <link rel="stylesheet" href="/static/app.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="masthead">
+        <div class="mark" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div>
+          <p class="eyebrow">EVIDENCE-LED DISSEMINATION INTELLIGENCE</p>
+          <h1>溯源 <span>／</span> 涉华政经研判</h1>
+        </div>
+        <div class="system-state" id="system-state">正在检查本地配置…</div>
+        <nav class="header-nav" aria-label="主要页面">
+          <a class="settings-link" href="/library">新闻 × 社媒 × 知识库 <span aria-hidden="true">↗</span></a>
+          <a class="settings-link" href="/settings">配置中心 <span aria-hidden="true">↗</span></a>
+        </nav>
+      </header>
+
+      <section class="briefing" aria-labelledby="briefing-title">
+        <div class="briefing-copy">
+          <p class="eyebrow">涉华政经舆情风险研判</p>
+          <h2 id="briefing-title">追踪海外叙事，<br>核查政经风险。</h2>
+          <p>围绕国际媒体与公开社媒中的涉华政治经济议题，检索多语种原文，核查传播主张与证据，并生成可回溯的风险研判。</p>
+        </div>
+        <form id="research-form" class="research-form">
+          <label for="task">议题与检索范围</label>
+          <textarea id="task" name="task" rows="5" maxlength="1000" placeholder="例如：检索近40天海外媒体关于对华电动汽车关税的报道，关注政策依据、产业影响和跨语种风险叙事。"></textarea>
+          <div class="search-options">
+            <label>自定义检索语种 <input id="languages" name="languages" placeholder="留空用九语种；或填：俄语,阿拉伯语,葡语"></label>
+            <div class="date-fields"><label>起始日期 <input id="start-date" name="start_date" type="date"></label><label>结束日期 <input id="end-date" name="end_date" type="date"></label></div>
+          <p id="language-defaults">默认检索英语、西语、德语、法语、俄语、阿拉伯语、葡语、韩语、日语九语种，共18组检索式，最多四路并行；可填写自定义语种缩小范围。留空日期则查近40天，每组最多返回50条，触顶时按日期拆分。候选逐条取文、去重入库，再选30–50篇独立长篇代表材料归纳观点和至少4个风险点。</p>
+          </div>
+          <div class="form-foot">
+            <div class="examples" aria-label="示例任务">
+              <button type="button" data-example="检索近40天海外媒体关于对华电动汽车关税的长篇报道与评论，核对政策依据、产业影响和跨语种风险叙事。">经贸政策</button>
+              <button type="button" data-example="检索近40天海外媒体关于中美科技限制的长篇分析与评论，识别政策变化、关键主张及对供应链的影响。">科技限制</button>
+            </div>
+            <button class="primary-button" id="run-button" type="submit">开始检索与研判 <span>↗</span></button>
+          </div>
+          <p class="form-note">提交会调用 DeepSeek 抓取接口和当前分析接口。系统不会要求网站账号或 Cookie；公开快照与转载版本会标注原站及实际取文链接。</p>
+        </form>
+      </section>
+
+      <div class="message" id="message" hidden></div>
+      <section class="job-progress" id="job-progress" hidden aria-label="检索进度">
+        <div class="job-progress-top"><strong id="progress-stage">准备检索</strong><span id="progress-percent">0%</span></div>
+        <div class="progress-track" id="progress-track" role="progressbar" aria-label="任务完成度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress-fill"></span></div>
+        <p id="progress-message">等待开始</p>
+        <div class="progress-stats" id="progress-stats"></div>
+      </section>
+
+      <section class="browser-import-panel" aria-labelledby="browser-import-title">
+        <div class="browser-import-heading"><div><p class="eyebrow">本机浏览器辅助取文</p><h2 id="browser-import-title">导入浏览器可见正文</h2></div><button type="button" id="browser-import-refresh">刷新导入列表</button></div>
+        <p>在装有你现有阅读插件的 Chrome 或 Edge 中打开文章，确认正文可见后点击“溯源 Clipper”，预览并一键保存。文章会立即写入 SQL 新闻库；数据库暂不可用时先保存在本机，恢复连接后补入。首次使用只需粘贴一次配对码；标题、日期或正文需要修正时再展开“检查与修改内容”。</p>
+        <div class="browser-import-setup"><span>扩展文件夹：<code>browser-extension</code> · 在浏览器扩展管理页开启开发者模式并“加载已解压的扩展程序”。</span><span>配对码 <code id="browser-import-token">读取中…</code> <button type="button" id="browser-copy-token">复制</button></span></div>
+        <div id="browser-import-list" class="browser-import-list"><p>正在读取导入材料…</p></div>
+        <p id="browser-import-state" role="status">保存后回到此页，勾选要加入本轮检索的文章；它们仍须通过日期、篇幅、体裁和同稿筛选。</p>
+      </section>
+
+      <section class="archive-section" aria-labelledby="archive-title">
+        <div class="archive-heading">
+          <div><p class="eyebrow">已保存的研究</p><h2 id="archive-title">研判档案</h2></div>
+          <span id="archive-state" role="status">正在读取新闻与研判…</span>
+        </div>
+        <div class="archive-toolbar">
+          <label class="archive-search">搜索档案<input id="archive-search" type="search" placeholder="搜索议题、研判或新闻" autocomplete="off"></label>
+          <div class="archive-navigation" aria-label="浏览研判档案">
+            <span id="archive-match-count" role="status"></span>
+            <button type="button" id="archive-prev" aria-label="向左浏览档案">←</button>
+            <button type="button" id="archive-next" aria-label="向右浏览档案">→</button>
+          </div>
+        </div>
+        <div class="archive-list" id="archive-list" aria-label="已保存的研判档案" tabindex="0"></div>
+        <section class="watch-panel" aria-labelledby="watch-title">
+          <div class="watch-heading"><div><p class="eyebrow">增量跟踪</p><h3 id="watch-title">每日监测议题</h3></div><span id="watch-state" role="status"></span></div>
+          <div id="watch-list" class="watch-list"></div>
+        </section>
+      </section>
+
+      <section class="results" id="results" hidden aria-live="polite">
+        <div class="result-heading">
+          <div>
+            <p class="eyebrow">研判档案</p>
+            <h2 id="result-topic">—</h2>
+          </div>
+          <div class="result-heading-actions"><div class="run-meta" id="run-meta"></div><div class="result-controls"><label>每日重跑时间 <input id="watch-time" type="time" value="09:00"></label><button type="button" id="watch-current">保存为每日监测</button><button type="button" id="close-results">收起档案 ↑</button></div></div>
+        </div>
+        <p class="assessment-note">自动生成的研判仅供研究参考，请结合原文核对事实与日期。</p>
+        <p class="legacy-note" id="legacy-note" hidden>这份档案由旧版少量检索流程生成，未按当前的30篇材料与4个风险点标准执行。</p>
+        <div class="plan-strip" id="plan-strip"></div>
+        <section class="claim-timeline" id="claim-timeline" hidden aria-labelledby="claim-title">
+          <div class="sources-heading"><h3 id="claim-title">相比上次：主张如何变化</h3><p>仅追踪本系统采集材料；“最早出现”指本库已收集到的最早报道。</p></div>
+          <div id="claim-timeline-list"></div>
+        </section>
+        <section class="coverage" id="coverage" hidden aria-label="检索覆盖情况">
+          <div class="coverage-heading"><strong id="coverage-status"></strong><span id="coverage-count"></span></div>
+          <p id="coverage-note">长篇体裁、原发和同稿去重经过自动初筛；风险点可以共用报道。作者与首发仍需人工核验。</p>
+          <div class="language-coverage" id="language-coverage"></div>
+          <details><summary>查看全部检索式</summary><div id="query-list"></div></details>
+        </section>
+        <div class="analysis-grid" id="analysis-grid">
+          <article class="risk-card">
+            <div class="risk-topline"><span id="risk-label">综合风险</span><strong id="risk-level">待复核</strong></div>
+            <p class="risk-summary" id="risk-summary"></p>
+            <p class="risk-reason" id="risk-reason"></p>
+            <p class="risk-rubric" id="risk-rubric"></p>
+            <div class="action-list"><h3>建议动作</h3><ul id="actions"></ul></div>
+            <div class="limitation-list"><h3>证据局限</h3><ul id="limitations"></ul></div>
+          </article>
+          <article class="evidence-card" id="legacy-insights">
+            <div class="card-title"><span>传播点与叙事</span><span class="card-index">TRACE</span></div>
+            <div id="insights"></div>
+          </article>
+        </div>
+        <section class="risk-sections" id="risk-sections" hidden>
+          <div class="risk-sections-heading"><p class="eyebrow">证据支撑的主要风险</p><h3>风险点与对应报道</h3><span id="risk-sections-state"></span></div>
+          <div id="risk-section-list"></div>
+        </section>
+        <section class="review-workbench" id="review-workbench" hidden aria-labelledby="review-title">
+          <div class="sources-heading"><h3 id="review-title">证据核验工作台</h3><p>逐条核对原文、日期和取文版本；核验结果单独写入 SQL，不覆盖自动研判。</p></div>
+          <p id="review-summary" role="status"></p>
+          <div id="review-list"></div>
+        </section>
+        <section class="viewpoints" id="viewpoints" hidden aria-labelledby="viewpoints-title">
+          <div class="sources-heading"><h3 id="viewpoints-title">代表材料的主要观点</h3><p>归纳跨媒体共识与分歧，点击证据编号可查看报道。</p></div>
+          <div id="viewpoint-list"></div>
+        </section>
+        <section class="trends" id="trends" aria-labelledby="trends-title">
+          <div class="sources-heading"><h3 id="trends-title">样本趋势与构成</h3><p>仅统计本轮去重候选，不代表全网声量或受众触达。</p></div>
+          <div class="trend-grid"><div><h4>发布日期</h4><div id="trend-dates" class="trend-chart"></div></div><div><h4>语种</h4><div id="trend-languages" class="trend-bars"></div><h4>主要来源</h4><div id="trend-sources" class="trend-bars"></div></div></div>
+          <div id="trend-history" class="trend-history" hidden></div>
+        </section>
+        <section class="sources-section">
+          <div class="sources-heading"><h3><span id="source-list-title">入选新闻列表</span> <span id="source-count"></span></h3><p>点击标题查看原始来源；快照取文会另标实际链接。</p></div>
+          <div class="evidence-ribbon" id="evidence-ribbon" aria-label="来源证据等级统计"></div>
+          <div class="source-list" id="source-list"></div>
+        </section>
+        <section class="candidate-section" id="candidate-section" hidden>
+          <div class="sources-heading"><h3>本轮候选库 <span id="candidate-count"></span></h3><p>保留入选、合格未入选及排除记录；同稿只保留一份正文主记录。正文缺失的报道可打开原站，在浏览器中阅读后用扩展导入，供下一轮研判使用。</p></div>
+          <div class="candidate-controls"><input id="candidate-search" type="search" placeholder="搜索候选标题、来源或排除原因" aria-label="搜索候选"><span id="candidate-match"></span></div>
+          <div id="candidate-list" class="candidate-list"></div>
+          <button type="button" id="candidate-more" class="candidate-more" hidden>显示更多候选</button>
+        </section>
+        <section class="archive-hints" id="archive-hints" hidden>
+          <div class="sources-heading"><h3>快照与待核线索 <span id="archive-hint-count"></span></h3><p>这些链接未取得合格长篇正文，不计入入选报道或风险点证据。</p></div>
+          <div id="archive-hint-list"></div>
+        </section>
+      </section>
+
+      <section class="method" aria-labelledby="method-title">
+        <p class="eyebrow">方法边界</p>
+        <h2 id="method-title">先证据，后结论。</h2>
+        <div class="method-grid">
+          <p><b>01</b> Search 发现候选来源，Fetch 只提取公开可访问正文。</p>
+          <p><b>02</b> 原站访问受限时查找公开快照或署名转载，只有取得正文并通过筛选才计入材料。</p>
+          <p><b>03</b> 风险结论需回指证据编号，并显式呈现不确定性。</p>
+        </div>
+      </section>
+    </main>
+    <script src="/static/app.js"></script>
+  </body>
+</html>

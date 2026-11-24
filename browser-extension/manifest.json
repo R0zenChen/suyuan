@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "溯源 Clipper",
+  "version": "1.1.0",
+  "description": "清理网页正文、识别发布日期，并手动选择本机 PDF 入库。",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["http://127.0.0.1/*", "http://localhost/*", "https://sci-hub.se/*", "https://www.sci-hub.se/*", "https://sci-hub.st/*", "https://www.sci-hub.st/*", "https://sci-hub.ru/*", "https://www.sci-hub.ru/*"],
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [{
+    "matches": ["https://*.cnki.net/*", "https://*.arxiv.org/*", "https://*.springer.com/*", "https://*.nature.com/*", "https://*.sciencedirect.com/*", "https://*.wiley.com/*", "https://*.tandfonline.com/*", "https://*.sagepub.com/*", "https://*.frontiersin.org/*", "https://*.mdpi.com/*", "https://*.plos.org/*", "https://pubmed.ncbi.nlm.nih.gov/*", "https://*.acm.org/*", "https://*.ieee.org/*", "https://*.jstor.org/*", "https://*.ssrn.com/*", "https://*.biorxiv.org/*", "https://*.medrxiv.org/*"],
+    "js": ["doi-link.js"],
+    "run_at": "document_idle"
+  }],
+  "action": {
+    "default_title": "导入当前文章到溯源",
+    "default_popup": "popup.html"
+  }
+}

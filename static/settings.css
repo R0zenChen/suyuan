@@ -1,0 +1,33 @@
+body { background: #f5f3ed; }
+.settings-shell { max-width: 1180px; margin: 0 auto; padding: 24px 34px 80px; }
+.settings-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-bottom: 22px; border-bottom: 1px solid #ccd4d1; }
+.back-link { color: #31546a; font-size: 12px; text-decoration: none; }
+.back-link:hover { text-decoration: underline; }
+.settings-brand { font-family: Georgia, "Noto Serif SC", serif; font-size: 19px; font-weight: 700; white-space: nowrap; }
+.settings-brand b { color: var(--signal); }.brand-mark { display: inline-grid; place-items: center; width: 29px; height: 29px; margin-right: 10px; background: var(--deep); color: #fff; font: 18px Georgia, serif; }
+.settings-local { color: var(--muted); font-size: 11px; }
+.settings-intro { display: grid; grid-template-columns: 1fr 260px; gap: 20px; padding: 62px 0 50px; }
+.settings-intro .eyebrow { grid-column: 1 / -1; margin-bottom: -13px; }
+.settings-intro h1 { margin: 0; font: 48px/1.18 Georgia, "Noto Serif SC", serif; letter-spacing: -.035em; }
+.settings-intro h1 em { color: var(--signal); font-style: normal; }
+.settings-intro > p:last-child { align-self: end; margin: 0 0 7px; color: var(--muted); font-size: 13px; line-height: 1.8; }
+.settings-layout { display: grid; grid-template-columns: 265px minmax(0, 1fr); align-items: start; gap: 24px; }
+.settings-tabs { display: grid; border: 1px solid var(--line); background: #fff; }
+.settings-tab { display: flex; width: 100%; gap: 14px; align-items: center; padding: 20px 17px; border: 0; border-bottom: 1px solid var(--line); background: #fff; color: var(--ink); text-align: left; }
+.settings-tab:last-child { border-bottom: 0; }.settings-tab:hover { background: #f3f6f4; }.settings-tab.active { background: var(--deep); color: #fff; }
+.tab-index { color: var(--signal); font: 18px Georgia, serif; }.settings-tab.active .tab-index { color: #f68b65; }
+.settings-tab span:nth-child(2) { display: grid; flex: 1; gap: 5px; }.settings-tab strong { font-size: 14px; }.settings-tab small { color: var(--muted); font-size: 10px; }.settings-tab.active small { color: #b9cbd4; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: #c6cccb; }.status-dot.ready { background: #42a789; }.status-dot.warning { background: #e69a59; }
+.settings-content { min-width: 0; }.settings-panel { min-height: 570px; padding: 30px 38px; border: 1px solid var(--line); background: #fff; box-shadow: 0 14px 40px rgb(24 51 59 / 6%); }.settings-panel[hidden] { display: none; }
+.panel-top { display: flex; justify-content: space-between; align-items: center; gap: 20px; }.panel-number { color: var(--signal); font-size: 10px; font-weight: 800; letter-spacing: .16em; }.panel-status { padding: 5px 9px; background: #edf2f1; color: var(--deep); font-size: 11px; }
+.settings-panel h2 { margin: 24px 0 10px; font: 33px Georgia, "Noto Serif SC", serif; }.panel-description { max-width: 630px; margin-bottom: 26px; color: var(--muted); font-size: 13px; line-height: 1.8; }
+.config-form { display: grid; gap: 16px; }.config-form label { display: grid; gap: 7px; color: var(--ink); font-size: 12px; font-weight: 700; }
+.config-form input, .config-form select { width: 100%; min-width: 0; height: 42px; padding: 9px 11px; border: 1px solid #bfcdd0; border-radius: 0; outline-color: var(--signal); background: #fafbf9; color: var(--ink); font: 13px "Noto Sans SC", "Microsoft YaHei", sans-serif; }
+.config-form input::placeholder { color: #89979a; }.config-form input:focus, .config-form select:focus { background: #fff; border-color: var(--deep); }
+.field-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 8px; }.inline-button { height: 42px; padding: 0 16px; border: 1px solid var(--deep); background: #fff; color: var(--deep); font-size: 12px; font-weight: 700; white-space: nowrap; }
+.inline-button:hover, .secondary-action:hover { background: var(--mist); }.field-help { margin: -7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }.form-actions { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; margin-top: 5px; }.form-actions button { min-height: 40px; padding: 9px 15px; font-size: 12px; font-weight: 700; }.form-actions button:disabled, .inline-button:disabled { opacity: .55; cursor: wait; }
+.secondary-action { border: 1px solid var(--deep); background: #fff; color: var(--deep); }.main-action { border: 1px solid var(--deep); background: var(--deep); color: #fff; }.main-action:hover { background: #24536f; }.main-action span { margin-left: 15px; color: #f18b67; }.text-action { border: 0; background: transparent; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+.panel-feedback { min-height: 20px; margin: 18px 0; color: var(--deep); font-size: 12px; line-height: 1.6; }.panel-feedback.error { color: #b94e32; }.panel-footnote { padding-top: 15px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; line-height: 1.6; }.panel-footnote code { color: var(--deep); }
+@media (max-width: 760px) { .settings-shell { padding: 19px 17px 50px; }.settings-header { flex-wrap: wrap; }.settings-local { display: none; }.settings-intro { display: block; padding: 42px 0 32px; }.settings-intro h1 { font-size: 36px; margin: 12px 0 18px; }.settings-intro > p:last-child { max-width: 560px; }.settings-layout { display: block; }.settings-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 15px; }.settings-tab { min-height: 80px; padding: 13px 9px; gap: 6px; border-bottom: 0; border-right: 1px solid var(--line); }.settings-tab:last-child { border-right: 0; }.settings-tab .tab-index { font-size: 13px; }.settings-tab strong { font-size: 11px; }.settings-tab small { display: none; }.settings-panel { padding: 25px 20px; min-height: 0; }.settings-panel h2 { font-size: 28px; } }
+@media (max-width: 480px) { .two-columns { grid-template-columns: 1fr; }.settings-tab .status-dot { display: none; }.field-row { grid-template-columns: 1fr; }.inline-button { justify-self: start; }.settings-brand { font-size: 16px; } }

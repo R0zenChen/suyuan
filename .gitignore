@@ -1,0 +1,48 @@
+# Local credentials and research data
+.env
+.env.*
+!.env.example
+data/
+课程作业资料-不上传/
+slides/
+/答辩PPT-*
+/涉华政经舆情风险研判-领域方案.md
+*.log
+*.sqlite
+*.sqlite3
+
+# Python environments and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+
+# JavaScript dependencies
+node_modules/
+
+# Generated release and document files
+dist/
+output/
+tmp/
+build/
+
+# Local document-layout helpers tied to this workstation
+tools/build_condensed_source.mjs
+tools/build_polished_manual.mjs
+tools/print_polished_manual.cjs
+tools/render_pdf_qa.py
+
+# Local agent and editor state
+.recovery/
+.ai-memory/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.tmp

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>融文研究台 · 本地</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/accounts.css"></head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand"><span class="brandmark">M<span>·</span></span><div><strong>融文研究台</strong><small>LOCAL RESEARCH STUDIO</small></div></div>
+    <div class="side-caption">工作区</div>
+    <nav><a class="nav-on" href="#search"><span>⌕</span> 探索检索</a><a href="#results"><span>▦</span> 分析概览</a><a href="#mentions"><span>≡</span> 新闻列表</a></nav>
+    <div class="side-bottom"><div class="connection"><i></i><div><strong id="connectionLabel">正在检查连接</strong><small>本机 Chrome · 融文账号</small></div></div><p>结果和检索式保存在这台电脑。授权只用于本次会话。</p></div>
+  </aside>
+  <main>
+    <header class="topbar"><div class="breadcrumb">探索 <span>/</span> 新建分析</div><div class="topright"><span id="todayLabel"></span><span class="local-pill">● 本地运行</span></div></header>
+    <div class="content">
+      <section class="hero"><div><p class="eyebrow">DISCOVER / 研究工作台</p><h1>把问题变成可检索的证据</h1><p>写下主题、生成布尔式、检索融文，再逐篇核查新闻。</p></div><div class="hero-rail"><span>01 / 设定主题</span><span>02 / 执行检索</span><span>03 / 分析报道</span></div></section>
+      <div class="work-grid" id="search">
+        <section class="panel query-panel"><div class="section-heading"><div><p class="eyebrow">QUERY BUILDER</p><h2>检索语句</h2></div><span class="tag">多语种 Boolean</span></div>
+          <div class="ai-box"><div class="ai-head"><span class="spark">✳</span><div><strong>让 AI 起草检索式</strong><small>生成后可修改，运行前由你决定最终口径</small></div></div><div class="ai-inputs"><label>研究主题<input id="subject" placeholder="例如：新雅尔塔话语及大国安全秩序" value="新雅尔塔话语"></label><label>补充语境<input id="context" placeholder="例如：俄乌战争、美俄中会晤、欧洲安全"></label><label>检索语言<input id="languages" value="中文、英语、俄语、法语、西班牙语、德语、意大利语、日语、韩语"></label></div><div class="ai-actions"><button id="aiButton" class="btn-ai">✳ 生成检索式</button><span id="aiStatus"></span></div></div>
+          <label class="query-label" for="query">Boolean 检索式 <span>精确短语请使用双引号</span></label><textarea id="query" spellcheck="false" placeholder="在这里输入或粘贴检索式"></textarea><div id="aiRationale" class="rationale" hidden></div>
+        </section>
+        <aside class="panel filter-panel"><div class="section-heading"><div><p class="eyebrow">SCOPE</p><h2>检索范围</h2></div></div><div class="account-head"><span class="field-label">融文账号</span><button id="addAccount" type="button">＋ 添加账号</button></div><select id="accountSelect" aria-label="选择融文账号"><option value="default">当前 Chrome 账号</option></select><div id="accountManager" class="account-manager" aria-label="融文账号管理"></div><div id="accountStatus" class="field-hint account-status">选择账号后运行检索。</div><label>开始日期<input id="from" type="date"></label><label>结束日期<input id="to" type="date"></label><div class="field-label">内容类型</div><div class="segmented" role="group" aria-label="内容类型"><button class="selected" data-kind="news">仅新闻</button><button data-kind="all">全部内容</button></div><p class="field-hint">“仅新闻”使用融文底层 news 类型，排除社交与招标内容。</p><div class="field-label">运行方式</div><div class="segmented" role="group" aria-label="运行方式"><button class="selected" data-mode="preview">快速预览</button><button data-mode="full">全量分析</button></div><p class="field-hint">快速预览精确统计月度数量，并显示每月部分报道；全量分析逐篇下载并计算分布。</p><button id="runButton" class="btn-run">运行检索 <span>↗</span></button><div id="runStatus" class="run-status" aria-live="polite">设定检索式后开始。</div></aside>
+      </div>
+      <section class="results" id="results"><div class="section-heading result-heading"><div><p class="eyebrow">ANALYSIS</p><h2>分析概览</h2></div><span id="modeBadge" class="tag">等待检索</span></div><div class="stats"><div class="stat"><span>匹配内容</span><strong id="totalCount">—</strong><small id="totalCaption">当前检索口径</small></div><div class="stat"><span>最高月份</span><strong id="peakMonth">—</strong><small id="peakMonthCount">月度命中数</small></div><div class="stat"><span>已取回稿件</span><strong id="returnedCount">—</strong><small id="returnedCaption">用于内容分布</small></div></div><div class="analytics-grid"><div class="panel chart-panel"><div class="mini-head"><h3>传播趋势</h3><span>月度命中数</span></div><div id="trend" class="chart-empty">运行检索后显示趋势</div></div><div class="panel breakdown"><div class="mini-head"><h3>情感分布</h3><span id="sentimentCaption">等待数据</span></div><div id="sentiments" class="list-empty">运行检索后显示</div></div><div class="panel breakdown"><div class="mini-head"><h3>来源国</h3><span id="countryCaption">等待数据</span></div><div id="countries" class="list-empty">运行检索后显示</div></div></div></section>
+      <section class="panel mentions" id="mentions"><div class="mini-head"><div><p class="eyebrow">MENTIONS</p><h2>新闻列表</h2></div><div class="mention-actions"><span id="mentionCount">暂无稿件</span><a id="exportLink" class="export-link" hidden>导出 JSONL ↗</a></div></div><div class="table-wrap"><table><thead><tr><th>发布时间</th><th>标题与来源</th><th>国家</th><th>情感</th></tr></thead><tbody id="mentionRows"><tr><td colspan="4" class="empty-row">运行检索后在这里浏览报道。</td></tr></tbody></table></div><div class="pager"><button id="prevPage" disabled>← 上一页</button><span id="pageLabel">—</span><button id="nextPage" disabled>下一页 →</button></div></section>
+    </div>
+  </main>
+</div><script type="module" src="/app.js"></script>
+</body></html>

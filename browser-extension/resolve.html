@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>溯源 · DOI 镜像检查</title>
+  <style>
+    body { margin: 0; background: #f6f8f4; color: #1c3029; font: 15px/1.6 "Segoe UI", "Microsoft YaHei", sans-serif; }
+    main { max-width: 660px; margin: 8vh auto; padding: 32px; background: #fff; border: 1px solid #dce5de; box-shadow: 0 20px 50px #153c2810; }
+    h1 { margin: 0 0 8px; font-size: 25px; }
+    .eyebrow { color: #39705a; font-size: 11px; font-weight: 700; letter-spacing: .1em; }
+    code { overflow-wrap: anywhere; }
+    #status { min-height: 24px; margin: 20px 0 12px; color: #1c6045; font-weight: 650; }
+    #results { padding-left: 22px; color: #607069; }
+    #results li { margin: 5px 0; }
+    a { color: #17533f; }
+    .note { color: #607069; font-size: 12px; }
+  </style>
+</head>
+<body><main>
+  <p class="eyebrow">SUYUAN / DOI RESOLVER</p>
+  <h1>正在检查可用镜像</h1>
+  <p>DOI：<code id="doi"></code></p>
+  <p id="status" role="status" aria-live="polite">准备检查…</p>
+  <ol id="results"></ol>
+  <p class="note">只检查 DOI 页面是否出现 PDF，不会自动下载或导入。镜像和论文收录状况随时可能变化。</p>
+  <p><a id="official" target="_blank" rel="noopener noreferrer">打开 DOI 官方页面 ↗</a></p>
+</main><script src="resolve.js"></script></body>
+</html>
