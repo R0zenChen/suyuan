@@ -7,6 +7,7 @@ import os
 import socket
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 from urllib.error import URLError
@@ -17,14 +18,17 @@ ROOT = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path(__file__).reso
 env = os.environ.copy()
 env["PORT"] = "18080"
 env["SUYUAN_MELTWATER_PORT"] = "18789"
+log = tempfile.TemporaryFile(mode="w+t", encoding="utf-8", errors="replace")
 process = subprocess.Popen([sys.executable, "-u", str(ROOT / "app.py")], cwd=ROOT, env=env,
-                           stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT,
+                           stdout=log, stderr=subprocess.STDOUT,
                            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
 try:
     deadline = time.monotonic() + 60
     while time.monotonic() < deadline:
         if process.poll() is not None:
-            raise RuntimeError(f"服务提前退出：{process.returncode}")
+            log.flush()
+            log.seek(0)
+            raise RuntimeError(f"服务提前退出：{process.returncode}\n{log.read()[-5000:]}")
         try:
             with urlopen("http://127.0.0.1:18080/api/meltwater/status", timeout=2) as response:
                 payload = json.load(response)
@@ -35,7 +39,9 @@ try:
             pass
         time.sleep(0.5)
     else:
-        raise RuntimeError("60 秒内未同时启动 Python 与内置融文 Node 服务")
+        log.flush()
+        log.seek(0)
+        raise RuntimeError("60 秒内未同时启动 Python 与内置融文 Node 服务\n" + log.read()[-5000:])
 finally:
     process.terminate()
     try:
@@ -51,3 +57,4 @@ finally:
         time.sleep(0.5)
     else:
         raise RuntimeError("内置融文子进程未随主服务退出")
+    log.close()
